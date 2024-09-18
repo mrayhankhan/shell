@@ -71,7 +71,7 @@ SimpleShell also supports:
 
 
 ## Group Members and Contributions
-[M Rayhankhan 2022269 Rishab Kumar 2021087]
+M Rayhankhan 2022269 Rishab Kumar 2021087
 
 ## SimpleShell Implementation Details
 
@@ -109,4 +109,4 @@ The implementation includes error checking for system calls like fork(), execvp(
 5. No support for input/output redirection.
 
 ## Link to Private GitHub Repository
-[https://github.com/mrayhankhan/shell]
+https://github.com/mrayhankhan/shell
