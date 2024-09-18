@@ -1,6 +1,6 @@
 # SimpleShell
 
-SimpleShell is a basic Unix shell implementation in C, developed as part of [Your Course/Project Name].
+SimpleShell is a basic Unix shell implementation in C, developed as part of CSE 231: Operating System Assignment 2.
 
 ## Features
 
@@ -19,7 +19,7 @@ SimpleShell is a basic Unix shell implementation in C, developed as part of [You
 
 ### Clone the Repository
 ```bash
-git clone [Your Repository URL]
+git clone https://github.com/mrayhankhan/shell
 cd SimpleShell
 ```
 
@@ -88,7 +88,4 @@ make clean
 ```
 
 ## Contributing
-[Add instructions for how others can contribute to your project, if applicable]
-
-## License
-[Specify your project's license here]
+M Rayhankhan 2022269 Rishab Kumar 2021087
