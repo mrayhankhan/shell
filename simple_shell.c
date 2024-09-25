@@ -265,6 +265,11 @@ int main() {
             for (int i = 0; i < history.count; i++) {
                 printf("%d: %s\n", i + 1, history.commands[i]);
             }
+        } else if (strncmp(command, "./", 2) == 0) {
+            // Handle local executable
+            char *result = execute_command(command, &history, &history2);
+            printf("%s", result);
+            free(result);
         } else {
             // Check for invalid characters in the command
             if (!is_valid_command(command)) {
