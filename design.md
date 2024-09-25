@@ -71,7 +71,7 @@ SimpleShell also supports:
 
 
 ## Group Members and Contributions
-M Rayhankhan 2022269 Rishab Kumar 2021087
+M Rayhankhan 2022269 	Raunak Kumar Giri  2023427
 
 ## SimpleShell Implementation Details
 
