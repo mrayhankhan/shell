@@ -53,12 +53,13 @@ void parse_command(char *command, char **args) {
     args[i] = NULL; // Ensure the last element is NULL for execvp
 }
 
-// Function to check for invalid characters in the command
+// Updated function to check for invalid characters in the command
 int is_valid_command(char *command) {
-    return (strchr(command, '\\') == NULL && strchr(command, '\"') == NULL && strchr(command, '\'') == NULL);
+    // Allow most characters, but still prevent obvious security risks
+    return (strchr(command, ';') == NULL && strchr(command, '&') == NULL);
 }
 
-// Function to execute a single command and record its PID, execution time, and duration
+// Updated function to execute a single command and record its PID, execution time, and duration
 char* execute_command(char *command, struct History *history, struct History2 *history2) {
     char* result = (char*)malloc(1201);  // +1 for null terminator
     if (result == NULL) {
@@ -93,11 +94,20 @@ char* execute_command(char *command, struct History *history, struct History2 *h
         snprintf(result, 1200, "Error: Failed to create child process\n");
     } else if (pid == 0) {
         // Child process
-        // Use execvp to execute the command
-        if (execvp(args[0], args) == -1) {
-            perror("execvp failed");
-            exit(EXIT_FAILURE);
+        char *path = getenv("PATH");
+        char *path_copy = strdup(path);
+        char *dir = strtok(path_copy, ":");
+        char full_path[1024];
+
+        while (dir != NULL) {
+            snprintf(full_path, sizeof(full_path), "%s/%s", dir, args[0]);
+            execv(full_path, args);
+            dir = strtok(NULL, ":");
         }
+
+        free(path_copy);
+        fprintf(stderr, "Command not found: %s\n", args[0]);
+        exit(EXIT_FAILURE);
     } else {
         // Parent process
         // Record the PID and execution start time
@@ -140,6 +150,9 @@ char* execute_command(char *command, struct History *history, struct History2 *h
 
 // Function to execute a command with pipes
 void execute_piped_commands(char *command, struct History *history, struct History2 *history2) {
+    add_to_history(history, command);
+    time_t start_time = time(NULL);
+
     char *commands[100];
     int i = 0;
     commands[i] = strtok(command, "|");
@@ -201,6 +214,15 @@ void execute_piped_commands(char *command, struct History *history, struct Histo
     for (i = 0; i < num_commands; i++) {
         wait(NULL);
     }
+
+    // Record execution time and duration in history2
+    time_t end_time = time(NULL);
+    if (history2->count < 20) {
+        history2->pids[history2->count] = getpid(); // Parent process ID
+        history2->execution_time[history2->count] = start_time;
+        history2->execution_duration[history2->count] = difftime(end_time, start_time);
+        history2->count++;
+    }
 }
 
 // Function to execute a shell script
@@ -225,7 +247,7 @@ void execute_bash(char *script_name, struct History *history, struct History2 *h
     }
 }
 
-int main() {
+int main(void) {
     char command[1200];
 
     // Initialize the command history
@@ -245,6 +267,10 @@ int main() {
             break;
         }
         remove_newline(command);
+
+        if (strlen(command) == 0) {
+            continue;  // Skip empty commands
+        }
 
         if (strcmp(command, "exit") == 0) {
             // Display the History2 (PID, execution time, duration)
@@ -273,7 +299,7 @@ int main() {
         } else {
             // Check for invalid characters in the command
             if (!is_valid_command(command)) {
-                printf("Invalid command: commands should not include backslashes or quotes.\n");
+                printf("Invalid command: commands should not include semicolons or ampersands.\n");
             } else if (strchr(command, '|') != NULL) {
                 // Execute piped commands
                 execute_piped_commands(command, &history, &history2);

@@ -3,25 +3,37 @@
 echo "Testing SimpleShell commands..."
 
 # Test ls
-echo "ls" | ./simple-shell
-echo "ls -l" | ./simple-shell
+echo "ls"
+echo "ls -l"
 
 # Test echo
-echo "echo Hello, World!" | ./simple-shell
+echo "echo Hello, World!"
 
 # Test wc
-echo "wc -l simple-shell.c" | ./simple-shell
+echo "wc -l simple_shell.c"
 
 # Test grep
-echo "grep main simple-shell.c" | ./simple-shell
+echo "grep main simple_shell.c"
 
 # Test cat and pipe
-echo "cat simple-shell.c | grep int" | ./simple-shell
+echo "cat simple_shell.c | grep int"
 
 # Test sort
-echo "sort test_file.txt" | ./simple-shell
+echo "sort test_file.txt"
 
 # Test uniq
-echo "uniq test_file.txt" | ./simple-shell
+echo "uniq test_file.txt"
+
+# Test fib program
+echo "./fib 10"
+
+# Test helloworld program
+echo "./helloworld"
+
+# Test background execution
+echo "sleep 5 &"
+
+# Test history
+echo "history"
 
 echo "All tests completed."
